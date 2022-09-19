@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 def kompozit_52():
     stekloplast = \
@@ -89,7 +89,7 @@ def armolux():
     options = webdriver.ChromeOptions()
     s = Service('C:/webdr/chromedriver.exe')
     options.add_argument('headless')
-    driver = webdriver.Chrome(service=s)
+    driver = webdriver.Chrome(service=s, options=options)
     driver.get('https://armolux.ru/steklopastikovaya-armatura')
     required_html = driver.page_source
     soup = BeautifulSoup(required_html, 'html.parser')
