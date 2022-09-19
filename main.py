@@ -18,6 +18,8 @@ def kompozit_52():
     for p in price:
         if type(p) != 'NoneType':
             price_lst.append(p.text.strip())
+    for _ in range(len(title_lst)):
+        title_lst[_] = f'{title_lst[_][:3]}-{title_lst[_][3:5]}'.strip()
     price_title = dict(zip(title_lst, price_lst))
     for key, value in price_title.items():
         value = value.replace('Цена: ', '')
@@ -78,7 +80,7 @@ def parm_nn():
     retail = dict(zip(titles, retail_price))
     over_1000 = dict(zip(titles, over_1000_price))
     over_5000 = dict(zip(titles, over_5000_price))
-    return retail, over_1000, over_5000
+    return over_1000
 
 
 def armolux():
@@ -98,12 +100,15 @@ def armolux():
         price_list.append(float(_.text.replace(',', '.')))
     title_list = title_list[:11]
     price_list = price_list[:11]
+    for _ in range(len(title_list)):
+        title_list[_] = title_list[_][21:-3]
+
     price_title = dict(zip(title_list, price_list))
     return price_title
 
 
 # пока что вывод всех словарей
 print(kompozit_52())
-print(armatura_kompozit())
+'''print(armatura_kompozit())
 print(parm_nn())
-print(armolux())
+print(armolux())'''
