@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 
 
 def kompozit_52():
@@ -79,7 +81,29 @@ def parm_nn():
     return retail, over_1000, over_5000
 
 
+def armolux():
+    options = webdriver.ChromeOptions()
+    s = Service('C:/webdr/chromedriver.exe')
+    options.add_argument('headless')
+    driver = webdriver.Chrome(service=s)
+    driver.get('https://armolux.ru/steklopastikovaya-armatura')
+    required_html = driver.page_source
+    soup = BeautifulSoup(required_html, 'html.parser')
+    title = soup.find_all('div', class_='t778__title t-name t-name_xs js-product-name')
+    price = soup.find_all('div', class_='t778__price-value js-product-price notranslate')
+    title_list, price_list = [], []
+    for _ in title:
+        title_list.append(_.text.strip())
+    for _ in price:
+        price_list.append(float(_.text.replace(',', '.')))
+    title_list = title_list[:11]
+    price_list = price_list[:11]
+    price_title = dict(zip(title_list, price_list))
+    return price_title
+
+
 # пока что вывод всех словарей
 print(kompozit_52())
 print(armatura_kompozit())
 print(parm_nn())
+print(armolux())
