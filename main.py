@@ -83,4 +83,3 @@ def parm_nn():
 print(kompozit_52())
 print(armatura_kompozit())
 print(parm_nn())
-
