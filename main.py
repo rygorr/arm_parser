@@ -77,10 +77,12 @@ def parm_nn():
             retail_price.append(float(price_list[ret + 1]))
             over_1000_price.append(float(price_list[ret + 2]))
             over_5000_price.append(float(price_list[ret + 3]))
+    for _ in range(len(titles)):
+        titles[_] = f'АСК-{titles[_][8:10]}'.strip()
     retail = dict(zip(titles, retail_price))
     over_1000 = dict(zip(titles, over_1000_price))
     over_5000 = dict(zip(titles, over_5000_price))
-    return over_1000
+    return over_5000
 
 
 def armolux():
@@ -102,13 +104,14 @@ def armolux():
     price_list = price_list[:11]
     for _ in range(len(title_list)):
         title_list[_] = title_list[_][21:-3]
+        title_list[_] = f'АСК-{title_list[_]}'
 
     price_title = dict(zip(title_list, price_list))
     return price_title
 
 
 # пока что вывод всех словарей
-print(kompozit_52())
-'''print(armatura_kompozit())
-print(parm_nn())
-print(armolux())'''
+print('Композит 52', kompozit_52())
+print('Арматура Композит', armatura_kompozit())
+print('Парм', parm_nn())
+print('Армолюкс', armolux())
