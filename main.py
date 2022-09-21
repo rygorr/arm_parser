@@ -110,8 +110,32 @@ def armolux():
     return price_title
 
 
+def heltex():
+    options = webdriver.ChromeOptions()
+    s = Service('C:/webdr/chromedriver.exe')
+    options.add_argument('headless')
+    driver = webdriver.Chrome(service=s, options=options)
+    driver.get('https://heltex.ru/catalog/kompozitnaya-armatura/stekloplastikovaya-armatura/')
+    required_html = driver.page_source
+    soup = BeautifulSoup(required_html, 'html.parser')
+    title = soup.find_all('div', class_="product-prices__name")
+    price = soup.find_all('div', class_='product-prices__price')
+    title_lst, price_lst = [], []
+    for _ in title:
+        title_lst.append(_.text[27:-2])
+    for _ in price:
+        p = _.text[5:20].strip()
+        p = p.replace(',', '.')
+        price_lst.append(float(p))
+    title_price = dict(zip(title_lst, price_lst))
+    return title_price
+
+
+
+
 # пока что вывод всех словарей
 print('Композит 52', kompozit_52())
 print('Арматура Композит', armatura_kompozit())
 print('Парм', parm_nn())
 print('Армолюкс', armolux())
+print('Хелтекс', heltex())
