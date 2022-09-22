@@ -156,6 +156,24 @@ def kom_mir():
     return title_price
 
 
+def stroy_shans():
+    url = 'https://stroyshans.ru/catalog/stekloplastikovaya-kompozitnaya-armatura/'
+    r = requests.get(url)
+    soup = BeautifulSoup(r.content, 'html.parser')
+    title = soup.find_all('div', class_="catalog-item-property__value")
+    price = soup.find_all('span', class_='catalog-item-price')
+    count = 0
+    title_lst, price_lst = [], []
+    for _ in title:
+        count += 1
+        if count % 2 != 0:
+            title_lst.append(f'АСК-{_.text[:2].strip()}')
+    for _ in price:
+        price_lst.append(float(_.text.strip()[:5].replace('a', '').strip()))
+    price_title = dict(zip(title_lst, price_lst))
+    return price_title
+
+
 # пока что вывод всех словарей
 print('Композит 52', kompozit_52())
 print('Арматура Композит', armatura_kompozit())
@@ -163,3 +181,4 @@ print('Парм', parm_nn())
 print('Армолюкс', armolux())
 print('Хелтекс', heltex())
 print('Коммир', kom_mir())
+print('Стройшанс', stroy_shans())
