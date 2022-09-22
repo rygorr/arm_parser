@@ -11,8 +11,10 @@ def get_by_selenium(url):
     s = Service('C:/webdr/chromedriver.exe')
     options.add_argument('headless')
     driver = webdriver.Chrome(service=s, options=options)
+    driver.get(url)
     required_html = driver.page_source
-    return BeautifulSoup(required_html, 'html.parser')
+    soup = BeautifulSoup(required_html, 'html.parser')
+    return soup
 
 
 def kompozit_52():
@@ -122,13 +124,8 @@ def armolux():
 
 
 def heltex():
-    options = webdriver.ChromeOptions()
-    s = Service('C:/webdr/chromedriver.exe')
-    options.add_argument('headless')
-    driver = webdriver.Chrome(service=s, options=options)
-    driver.get('https://heltex.ru/catalog/kompozitnaya-armatura/stekloplastikovaya-armatura/')
-    required_html = driver.page_source
-    soup = BeautifulSoup(required_html, 'html.parser')
+    url = 'https://heltex.ru/catalog/kompozitnaya-armatura/stekloplastikovaya-armatura/'
+    soup = get_by_selenium(url)
     title = soup.find_all('div', class_="product-prices__name")
     price = soup.find_all('div', class_='product-prices__price')
     title_lst, price_lst = [], []
@@ -144,14 +141,7 @@ def heltex():
 
 def kom_mir():
     url = 'http://kom-mir.ru/kompozitnaya-armatura#rec311796346'
-    #parse = get_by_selenium(url)
-    options = webdriver.ChromeOptions()
-    s = Service('C:/webdr/chromedriver.exe')
-    options.add_argument('headless')
-    driver = webdriver.Chrome(service=s, options=options)
-    driver.get(url)
-    required_html = driver.page_source
-    parse = BeautifulSoup(required_html, 'html.parser')
+    parse = get_by_selenium(url)
     title = parse.find_all('div', class_="t776__title t-name t-name_md js-product-name")
     price = parse.find_all('div', class_="t776__price-value js-product-price notranslate")
     title_lst, price_lst = [], []
@@ -164,6 +154,8 @@ def kom_mir():
     price_lst = list(map(lambda x: float(x), price_lst))
     title_price = dict(zip(title_lst, price_lst))
     return title_price
+
+
 # пока что вывод всех словарей
 print('Композит 52', kompozit_52())
 print('Арматура Композит', armatura_kompozit())
