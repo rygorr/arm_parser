@@ -1,7 +1,18 @@
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from bs4 import CData
+
+def get_by_selenium(url):
+    options = webdriver.ChromeOptions()
+    s = Service('C:/webdr/chromedriver.exe')
+    options.add_argument('headless')
+    driver = webdriver.Chrome(service=s, options=options)
+    required_html = driver.page_source
+    return BeautifulSoup(required_html, 'html.parser')
 
 
 def kompozit_52():
@@ -131,12 +142,32 @@ def heltex():
     return title_price
 
 
-
-
+def kom_mir():
+    url = 'http://kom-mir.ru/kompozitnaya-armatura#rec311796346'
+    #parse = get_by_selenium(url)
+    options = webdriver.ChromeOptions()
+    s = Service('C:/webdr/chromedriver.exe')
+    options.add_argument('headless')
+    driver = webdriver.Chrome(service=s, options=options)
+    driver.get(url)
+    required_html = driver.page_source
+    parse = BeautifulSoup(required_html, 'html.parser')
+    title = parse.find_all('div', class_="t776__title t-name t-name_md js-product-name")
+    price = parse.find_all('div', class_="t776__price-value js-product-price notranslate")
+    title_lst, price_lst = [], []
+    for _ in title:
+        title_lst.append(f'{_.text[27:30]}-{_.text[31:33]}'.strip())
+    title_lst = title_lst[:15]
+    for _ in price:
+        price_lst.append(_.text[3:].replace(',', '.'))
+    price_lst = price_lst[:15]
+    price_lst = list(map(lambda x: float(x), price_lst))
+    title_price = dict(zip(title_lst, price_lst))
+    return title_price
 # пока что вывод всех словарей
 print('Композит 52', kompozit_52())
 print('Арматура Композит', armatura_kompozit())
 print('Парм', parm_nn())
 print('Армолюкс', armolux())
 print('Хелтекс', heltex())
-
+print('Коммир', kom_mir())
