@@ -1,10 +1,9 @@
 import requests
-from bs4 import BeautifulSoup, Comment
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from bs4 import CData
+import pandas as pd
+
 
 def get_by_selenium(url):
     options = webdriver.ChromeOptions()
@@ -40,7 +39,7 @@ def kompozit_52():
         value = value.replace(',', '.')
         if value != 'по запросу':
             price_title[key] = float(value)
-    return price_title
+    return dict(sorted(price_title.items(), key=lambda x: int(x[0][4:])))
 
 
 def armatura_kompozit():
@@ -99,13 +98,8 @@ def parm_nn():
 
 
 def armolux():
-    options = webdriver.ChromeOptions()
-    s = Service('C:/webdr/chromedriver.exe')
-    options.add_argument('headless')
-    driver = webdriver.Chrome(service=s, options=options)
-    driver.get('https://armolux.ru/steklopastikovaya-armatura')
-    required_html = driver.page_source
-    soup = BeautifulSoup(required_html, 'html.parser')
+    url = 'https://armolux.ru/steklopastikovaya-armatura'
+    soup = get_by_selenium(url)
     title = soup.find_all('div', class_='t778__title t-name t-name_xs js-product-name')
     price = soup.find_all('div', class_='t778__price-value js-product-price notranslate')
     title_list, price_list = [], []
@@ -175,10 +169,42 @@ def stroy_shans():
 
 
 # пока что вывод всех словарей
-print('Композит 52', kompozit_52())
-print('Арматура Композит', armatura_kompozit())
-print('Парм', parm_nn())
-print('Армолюкс', armolux())
-print('Хелтекс', heltex())
-print('Коммир', kom_mir())
-print('Стройшанс', stroy_shans())
+'''kompozit_52_dict = kompozit_52()
+armatura_kompozit_dict = armatura_kompozit()
+parm_nn_dict = parm_nn()
+armolux_dict = armolux()
+heltex_dict = heltex()
+
+stroy_shans_dict = stroy_shans()'''
+def equal_len_and_output():
+    kom_mir_dict = kom_mir()
+    kompozit_52_prices = list(kompozit_52().values())
+    armatura_kompozit_prices = list(armatura_kompozit().values())
+    parm_nn_prices = list(parm_nn().values())
+    armolux_prices = list(armolux().values())
+    stroy_shans_prices = list(stroy_shans().values())
+    len_true = len(kom_mir_dict)
+    while len(kompozit_52_prices) < len_true:
+        kompozit_52_prices.append(None)
+    while len(armatura_kompozit_prices) < len_true:
+        armatura_kompozit_prices.append(None)
+    while len(parm_nn_prices) < len_true:
+        parm_nn_prices.append(None)
+    while len(armolux_prices) < len_true:
+        armolux_prices.append(None)
+    while len(stroy_shans_prices) < len_true:
+        stroy_shans_prices.append(None)
+    table = pd.DataFrame({
+        'title': kom_mir_dict.keys(),
+        'Композит 52': kompozit_52_prices,
+        'Арматура Композит': armatura_kompozit_prices,
+        'Парм НН': parm_nn_prices,
+        'Армолюкс': armolux_prices,
+        'Хелтекс': heltex().values(),
+        'Коммир': kom_mir_dict.values(),
+        'Строй Шанс': stroy_shans_prices
+    })
+    table.to_excel('D:/arm_parser_out/output.xlsx')
+
+
+equal_len_and_output()
