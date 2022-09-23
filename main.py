@@ -17,8 +17,8 @@ def get_by_selenium(url):
 
 
 def kompozit_52():
-    stekloplast = \
-        requests.get("https://kompozit52.ru/catalog/stekloplastikovaya_armatura/armatura_s_periodicheskim_profilem/")
+    url = 'https://kompozit52.ru/catalog/stekloplastikovaya_armatura/armatura_s_periodicheskim_profilem/'
+    stekloplast = requests.get(url)
     if stekloplast.status_code != 200:
         return
     soup = BeautifulSoup(stekloplast.content, 'html.parser')
@@ -168,14 +168,7 @@ def stroy_shans():
     return price_title
 
 
-# пока что вывод всех словарей
-'''kompozit_52_dict = kompozit_52()
-armatura_kompozit_dict = armatura_kompozit()
-parm_nn_dict = parm_nn()
-armolux_dict = armolux()
-heltex_dict = heltex()
-
-stroy_shans_dict = stroy_shans()'''
+# вывод в excel файл
 def equal_len_and_output():
     kom_mir_dict = kom_mir()
     kompozit_52_prices = list(kompozit_52().values())
