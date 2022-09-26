@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 import pandas as pd
-
+from datetime import date
+import telebot
 
 def get_by_selenium(url):
     options = webdriver.ChromeOptions()
@@ -188,7 +189,7 @@ def equal_len_and_output():
     while len(stroy_shans_prices) < len_true:
         stroy_shans_prices.append(None)
     table = pd.DataFrame({
-        'title': kom_mir_dict.keys(),
+        'Наименование': kom_mir_dict.keys(),
         'Композит 52': kompozit_52_prices,
         'Арматура Композит': armatura_kompozit_prices,
         'Парм НН': parm_nn_prices,
@@ -197,7 +198,7 @@ def equal_len_and_output():
         'Коммир': kom_mir_dict.values(),
         'Строй Шанс': stroy_shans_prices
     })
-    table.to_excel('D:/arm_parser_out/output.xlsx')
+    return table.to_excel(f'D:/arm_parser_out/output{date.today()}.xlsx', index=False)
 
 
 equal_len_and_output()
