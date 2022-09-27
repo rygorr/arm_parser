@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 import pandas as pd
 from datetime import date
-import telebot
+
 
 def get_by_selenium(url):
     options = webdriver.ChromeOptions()
@@ -15,6 +15,14 @@ def get_by_selenium(url):
     required_html = driver.page_source
     soup = BeautifulSoup(required_html, 'html.parser')
     return soup
+
+
+def get_by_requests(url):
+    parse = requests.get(url)
+    if parse.status_code != 200:
+        return 'Error in requests'
+    else:
+        return BeautifulSoup(parse.content, 'html.parser')
 
 
 def kompozit_52():
