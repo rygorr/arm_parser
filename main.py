@@ -29,8 +29,9 @@ def kompozit_52():
     url = 'https://kompozit52.ru/catalog/stekloplastikovaya_armatura/armatura_s_periodicheskim_profilem/'
     stekloplast = requests.get(url)
     if stekloplast.status_code != 200:
-        return
-    soup = BeautifulSoup(stekloplast.content, 'html.parser')
+        soup = get_by_selenium(url)
+    else:
+        soup = BeautifulSoup(stekloplast.content, 'html.parser')
     title = soup.find_all('a', class_='row card_name')
     price = soup.find_all('div', class_='row card_price')
     title_lst, price_lst = [], []
@@ -177,6 +178,38 @@ def stroy_shans():
     return price_title
 
 
+def armplast(type_of_price='wholesale'):
+    url = 'https://arm-plast.ru/czenyi/armatura-kypit/stekloplastikovaya-armatura-kypit/ceny.html'
+    parse = get_by_requests(url)
+    if parse == 'Error in requests':
+        soup = get_by_selenium(url)
+    else:
+        soup = parse
+    title = soup.find_all('a', class_='sip-p-link')
+    price = list(soup.find_all('div', class_='p-price'))
+    title_lst, price_ret_lst, price_wholesale_lst = [], [], []
+    for _ in title:
+        title_lst.append(_.text[27:])
+    for _ in range(10):
+        if _ % 2 == 0:
+            price_ret_lst.append(float(price[_].text[4:-12]))
+        else:
+            price_wholesale_lst.append(float(price[_].text[4:-12]))
+    for _ in range(10, len(price)):
+        price_wholesale_lst.append(float(price[_].text[4:-12]))
+    price_ret_dict = dict(zip(title_lst[:5], price_ret_lst))
+    price_wholesale_dict = dict(zip(title_lst, price_wholesale_lst))
+    price_ret_str, price_wholesale_str = '', ''
+    for key, value in price_ret_dict.items():
+        price_ret_str += f'{key}  {value}\n'
+    for key, value in price_wholesale_dict.items():
+        price_wholesale_str += f'{key}  {value}\n'
+    if type_of_price == 'retail':
+        return price_ret_str
+    elif type_of_price == 'wholesale':
+        return price_wholesale_str
+
+
 # вывод в excel файл
 def equal_len_and_output():
     kom_mir_dict = kom_mir()
@@ -208,5 +241,4 @@ def equal_len_and_output():
     })
     return table.to_excel(f'D:/arm_parser_out/output{date.today()}.xlsx', index=False)
 
-
-equal_len_and_output()
+print(armplast())
