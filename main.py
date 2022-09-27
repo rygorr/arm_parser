@@ -241,4 +241,3 @@ def equal_len_and_output():
     })
     return table.to_excel(f'D:/arm_parser_out/output{date.today()}.xlsx', index=False)
 
-print(armplast())
