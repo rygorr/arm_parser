@@ -2,8 +2,7 @@ import main
 import telebot
 from telebot import types
 from datetime import date
-import os.path
-TOKEN = '5608886795:AAFmBrGjxaNvnWl9HsrLPyDyqzxt7V2XWpo'
+TOKEN = 'myTOKEN'
 URL = 'https://api.telegram.org/bot'
 bot = telebot.TeleBot(TOKEN)
 
@@ -18,16 +17,14 @@ def start(message):
     bot.send_message(chat_id=message.chat.id, text=user, reply_markup=markup)
 
 
+
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     if message.text == "Привет":
         bot.send_message(message.from_user.id, "Привет, чем я могу тебе помочь?")
     if message.text == 'Прислать все цены':
-        prices_file = f'D:/arm_parser_out/output{date.today()}.xlsx'
-        if not os.path.exists(prices_file):
-            main.equal_len_and_output()
-        else:
-            bot.send_document(chat_id=message.chat.id, document=open(prices_file, 'rb'))
+        main.equal_len_and_output()
+        bot.send_document(chat_id=message.chat.id, document=open(f'D:/arm_parser_out/output{date.today()}.xlsx', 'rb'))
     elif message.text == 'Прислать наши цены':
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         retail = types.KeyboardButton('Розница')
@@ -45,7 +42,7 @@ def get_text_messages(message):
         our_prices = types.KeyboardButton('Прислать наши цены')
         markup_menu.add(all_prices, our_prices)
         menu_message = f'{message.from_user.first_name}, чем я могу помочь?'
-        bot.send_message(message.from_user.id, menu_message, reply_markup=markup_menu)
+        bot.send_message(message.from_user.id, menu_message , reply_markup=markup_menu)
 
 
 @bot.message_handler(commands=['file'])
