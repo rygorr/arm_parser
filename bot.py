@@ -2,7 +2,7 @@ import main
 import telebot
 from telebot import types
 from datetime import date
-TOKEN = 'myTOKEN'
+TOKEN = 'myTOKEсN'
 URL = 'https://api.telegram.org/bot'
 bot = telebot.TeleBot(TOKEN)
 
